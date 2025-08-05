@@ -244,6 +244,58 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Profile image interactive effects
+    const profileImage = document.querySelector('.profile-image');
+    if (profileImage) {
+        let isHovered = false;
+        
+        profileImage.addEventListener('mouseenter', function() {
+            isHovered = true;
+            this.style.animationPlayState = 'paused';
+            
+            // Add sparkle effect
+            createSparkles(this.parentElement);
+        });
+        
+        profileImage.addEventListener('mouseleave', function() {
+            isHovered = false;
+            this.style.animationPlayState = 'running';
+            
+            // Remove sparkles
+            const sparkles = this.parentElement.querySelectorAll('.sparkle');
+            sparkles.forEach(sparkle => sparkle.remove());
+        });
+        
+        // Add click effect
+        profileImage.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95) rotate(0deg)';
+            setTimeout(() => {
+                this.style.transform = isHovered ? 'scale(1.05) rotate(5deg)' : '';
+            }, 150);
+        });
+    }
+
+    function createSparkles(container) {
+        for (let i = 0; i < 20; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.cssText = `
+                position: absolute;
+                width: ${Math.random() * 6 + 2}px;
+                height: ${Math.random() * 6 + 2}px;
+                background: radial-gradient(circle, #fff, #60a5fa);
+                border-radius: 50%;
+                left: ${Math.random() * 100}%;
+                top: ${Math.random() * 100}%;
+                animation: sparkleFloat ${Math.random() * 3 + 2}s ease-in-out infinite;
+                animation-delay: ${Math.random() * 2}s;
+                z-index: 10;
+                pointer-events: none;
+            `;
+            container.appendChild(sparkle);
+        }
+    }
+
     // Create animated background particles
     function createParticles() {
         const hero = document.querySelector('.hero');

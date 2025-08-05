@@ -16,7 +16,13 @@
                 </div>
             </div>
             <div class="col-lg-6 text-center">
-                <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Shawaiz" class="profile-image">
+                <div class="profile-container">
+                    <div class="profile-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Shawaiz" class="profile-image animate-float">
+                        <div class="profile-glow"></div>
+                        <div class="profile-border"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
