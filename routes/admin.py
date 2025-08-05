@@ -20,9 +20,13 @@ def login():
     if form.validate_on_submit():
         user = AdminUser.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password_hash, form.password.data):
-            login_user(user)
+            login_user(user, remember=True)
+            next_page = request.args.get('next')
+            if next_page:
+                return redirect(next_page)
             return redirect(url_for('admin.dashboard'))
-        flash('Invalid username or password', 'error')
+        else:
+            flash('Invalid username or password. Please try again.', 'danger')
     
     return render_template('admin/login.html', form=form)
 
