@@ -72,6 +72,11 @@
                             {% endif %}
                         </a>
                         
+                        <a class="nav-link {{ 'active' if 'admins' in request.endpoint else '' }}" 
+                           href="{{ url_for('admin.admins') }}">
+                            <i class="fas fa-users me-2"></i>Admin Users
+                        </a>
+                        
                         <a class="nav-link {{ 'active' if 'settings' in request.endpoint else '' }}" 
                            href="{{ url_for('admin.settings') }}">
                             <i class="fas fa-cog me-2"></i>Settings

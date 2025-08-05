@@ -16,18 +16,24 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('admin.dashboard'))
     
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = AdminUser.query.filter_by(username=form.username.data).first()
-        if user and check_password_hash(user.password_hash, form.password.data):
-            login_user(user, remember=True)
-            next_page = request.args.get('next')
-            if next_page:
-                return redirect(next_page)
-            return redirect(url_for('admin.dashboard'))
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        if username and password:
+            user = AdminUser.query.filter_by(username=username).first()
+            if user and check_password_hash(user.password_hash, password):
+                login_user(user, remember=True)
+                next_page = request.args.get('next')
+                if next_page:
+                    return redirect(next_page)
+                return redirect(url_for('admin.dashboard'))
+            else:
+                flash('Invalid username or password. Please try again.', 'danger')
         else:
-            flash('Invalid username or password. Please try again.', 'danger')
+            flash('Please enter both username and password.', 'danger')
     
+    form = LoginForm()
     return render_template('admin/login.html', form=form)
 
 @bp.route('/logout')
@@ -290,6 +296,56 @@ def delete_message(id):
     db.session.commit()
     flash('Message deleted successfully!', 'success')
     return redirect(url_for('admin.messages'))
+
+# Admin Management
+@bp.route('/admins')
+@login_required
+def admins():
+    admin_users = AdminUser.query.order_by(AdminUser.created_at.desc()).all()
+    return render_template('admin/admins.html', admin_users=admin_users)
+
+@bp.route('/admins/new', methods=['GET', 'POST'])
+@login_required
+def new_admin():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        if username and email and password:
+            # Check if username or email already exists
+            existing_user = AdminUser.query.filter(
+                (AdminUser.username == username) | (AdminUser.email == email)
+            ).first()
+            
+            if existing_user:
+                flash('Username or email already exists!', 'danger')
+            else:
+                admin_user = AdminUser()
+                admin_user.username = username
+                admin_user.email = email
+                admin_user.password_hash = generate_password_hash(password)
+                db.session.add(admin_user)
+                db.session.commit()
+                flash('Admin user created successfully!', 'success')
+                return redirect(url_for('admin.admins'))
+        else:
+            flash('Please fill in all fields.', 'danger')
+    
+    return render_template('admin/admin_form.html', title='New Admin')
+
+@bp.route('/admins/<int:id>/delete', methods=['POST'])
+@login_required
+def delete_admin(id):
+    if id == current_user.id:
+        flash('You cannot delete your own account!', 'danger')
+        return redirect(url_for('admin.admins'))
+    
+    admin_user = AdminUser.query.get_or_404(id)
+    db.session.delete(admin_user)
+    db.session.commit()
+    flash('Admin user deleted successfully!', 'success')
+    return redirect(url_for('admin.admins'))
 
 # Settings
 @bp.route('/settings', methods=['GET', 'POST'])
