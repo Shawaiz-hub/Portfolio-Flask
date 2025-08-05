@@ -23,7 +23,7 @@ app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-prod
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 # configure the database
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///portfolio.db")
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///portfolio.db"
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_recycle": 300,
     "pool_pre_ping": True,
@@ -77,9 +77,9 @@ with app.app_context():
     
     if not AdminUser.query.first():
         admin_user = AdminUser()
-        admin_user.username = 'admin'
-        admin_user.email = 'admin@portfolio.com'
-        admin_user.password_hash = generate_password_hash('admin123')
+        admin_user.username = 'Shawaiz'
+        admin_user.email = 'shawaiz@portfolio.com'
+        admin_user.password_hash = generate_password_hash('231980079')
         db.session.add(admin_user)
         db.session.commit()
-        print("Default admin user created: username='admin', password='admin123'")
+        print("Default admin user created: username='Shawaiz', password='231980079'")
