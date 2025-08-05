@@ -146,7 +146,7 @@
                                         <div class="col-sm-3"><strong>Message:</strong></div>
                                         <div class="col-sm-9">
                                             <div class="border rounded p-3 bg-light">
-                                                {{ message.message|nl2br }}
+                                                {{ message.message|nl2br|safe }}
                                             </div>
                                         </div>
                                     </div>

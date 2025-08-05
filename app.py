@@ -1,5 +1,6 @@
 import os
 import logging
+import re
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -77,16 +78,28 @@ with app.app_context():
     # Import models to ensure tables are created
     import models
     db.create_all()
-    
+
     # Create default admin user if none exists
     from models import AdminUser
     from werkzeug.security import generate_password_hash
-    
-    if not AdminUser.query.first():
-        admin_user = AdminUser()
-        admin_user.username = 'Shawaiz'
-        admin_user.email = 'shawaiz@portfolio.com'
-        admin_user.password_hash = generate_password_hash('231980079')
-        db.session.add(admin_user)
-        db.session.commit()
-        print("Default admin user created: username='Shawaiz', password='231980079'")
+
+    def create_admin_user():
+        if not AdminUser.query.first():
+            admin_user = AdminUser()
+            admin_user.username = 'Shawaiz'
+            admin_user.email = 'shawaiz@portfolio.com'
+            admin_user.password_hash = generate_password_hash('231980079')
+            db.session.add(admin_user)
+            db.session.commit()
+            print("Default admin user created: username='Shawaiz', password='231980079'")
+
+    # Create admin user if it doesn't exist
+    create_admin_user()
+
+    # Add custom Jinja2 filters
+    @app.template_filter('nl2br')
+    def nl2br_filter(text):
+        if text is None:
+            return ''
+        # Convert newlines to <br> tags
+        return re.sub(r'\r\n|\r|\n', '<br>', str(text))
