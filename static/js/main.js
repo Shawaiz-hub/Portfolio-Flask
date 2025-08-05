@@ -1,16 +1,36 @@
 // Portfolio Main JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    // Navbar scroll effect
+    // Enhanced navbar scroll effect with animations
     const navbar = document.querySelector('.navbar');
     if (navbar) {
+        let lastScrollY = window.scrollY;
+        
         window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY > 50) {
                 navbar.classList.add('scrolled');
+                // Hide navbar when scrolling down, show when scrolling up
+                if (currentScrollY > lastScrollY && currentScrollY > 200) {
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    navbar.style.transform = 'translateY(0)';
+                }
             } else {
                 navbar.classList.remove('scrolled');
+                navbar.style.transform = 'translateY(0)';
             }
+            
+            lastScrollY = currentScrollY;
         });
     }
+
+    // Add stagger animation to navbar items
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    navLinks.forEach((link, index) => {
+        link.style.setProperty('--animation-order', index);
+        link.classList.add('animate-fade-in-right', 'stagger-animation');
+    });
 
     // Mobile sidebar toggle for admin panel
     const sidebarToggle = document.getElementById('sidebarToggle');
@@ -45,23 +65,74 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add animation classes on scroll
+    // Enhanced scroll animations with stagger effect
     const observerOptions = {
         threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        rootMargin: '0px 0px -100px 0px'
     };
 
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-fade-in-up');
+                const animations = ['animate-fade-in-up', 'animate-bounce-in', 'animate-fade-in-left', 'animate-fade-in-right'];
+                const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+                
+                entry.target.classList.add(randomAnimation);
+                
+                // Add stagger effect for grouped elements
+                const siblings = Array.from(entry.target.parentElement.children);
+                const index = siblings.indexOf(entry.target);
+                entry.target.style.animationDelay = `${index * 0.1}s`;
             }
         });
     }, observerOptions);
 
     // Observe elements for animation
-    document.querySelectorAll('.card, .skill-item, .project-card').forEach(el => {
+    document.querySelectorAll('.card, .skill-item, .project-card, .hero-content > *, h1, h2, h3, p').forEach(el => {
         observer.observe(el);
+    });
+
+    // Typing animation for hero title
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+        const originalText = heroTitle.textContent;
+        heroTitle.textContent = '';
+        heroTitle.classList.add('animate-typing');
+        
+        let i = 0;
+        const typeWriter = () => {
+            if (i < originalText.length) {
+                heroTitle.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            } else {
+                setTimeout(() => {
+                    heroTitle.classList.remove('animate-typing');
+                    heroTitle.classList.add('animate-text-glow');
+                }, 1000);
+            }
+        };
+        
+        setTimeout(typeWriter, 1000);
+    }
+
+    // Floating elements animation
+    document.querySelectorAll('.floating-element').forEach((el, index) => {
+        el.style.animationDelay = `${index * 0.5}s`;
+        el.classList.add('animate-float');
+    });
+
+    // Text glow effect on hover for headings
+    document.querySelectorAll('h1, h2, h3, .hero-title, .navbar-brand').forEach(heading => {
+        heading.addEventListener('mouseenter', function() {
+            this.classList.add('animate-text-glow');
+        });
+        
+        heading.addEventListener('mouseleave', function() {
+            setTimeout(() => {
+                this.classList.remove('animate-text-glow');
+            }, 2000);
+        });
     });
 
     // Form validation and submission
@@ -172,6 +243,48 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.classList.toggle('fa-sun');
         });
     }
+
+    // Create animated background particles
+    function createParticles() {
+        const hero = document.querySelector('.hero');
+        if (!hero) return;
+
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: ${Math.random() * 4 + 1}px;
+                height: ${Math.random() * 4 + 1}px;
+                background: rgba(59, 130, 246, ${Math.random() * 0.5 + 0.2});
+                border-radius: 50%;
+                left: ${Math.random() * 100}%;
+                top: ${Math.random() * 100}%;
+                animation: float ${Math.random() * 10 + 10}s ease-in-out infinite;
+                animation-delay: ${Math.random() * 5}s;
+                z-index: 1;
+            `;
+            hero.appendChild(particle);
+        }
+    }
+
+    // Initialize particles after a short delay
+    setTimeout(createParticles, 1000);
+
+    // Add smooth color transitions on element interactions
+    document.querySelectorAll('.btn, .card, .nav-link').forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            this.style.transition = 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        });
+    });
+
+    // Dynamic text color animation
+    setInterval(() => {
+        const textElements = document.querySelectorAll('.animate-text-glow');
+        textElements.forEach(el => {
+            const hue = Math.random() * 60 + 200; // Blue spectrum
+            el.style.textShadow = `0 0 20px hsl(${hue}, 70%, 60%)`;
+        });
+    }, 3000);
 });
 
 // Utility functions

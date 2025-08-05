@@ -1,29 +1,31 @@
 
 /* CSS Reset and Base Variables */
 :root {
-    --primary-color: #1e40af;
-    --secondary-color: #3b82f6;
-    --accent-color: #60a5fa;
-    --bg-dark: #0f172a;
-    --bg-darker: #020617;
-    --bg-card: #1e293b;
-    --bg-card-hover: #334155;
-    --text-primary: #f8fafc;
+    --primary-color: #1e3a8a;
+    --secondary-color: #2563eb;
+    --accent-color: #3b82f6;
+    --light-blue: #60a5fa;
+    --bg-dark: #0a1128;
+    --bg-darker: #051025;
+    --bg-card: #1e2749;
+    --bg-card-hover: #2d3748;
+    --text-primary: #f1f5f9;
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
     --border-color: #334155;
     --success-color: #10b981;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
-    --transition-fast: all 0.2s ease;
-    --transition-normal: all 0.3s ease;
-    --transition-slow: all 0.5s ease;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    --gradient-accent: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+    --transition-fast: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-sm: 0 1px 2px 0 rgba(59, 130, 246, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(59, 130, 246, 0.15);
+    --shadow-lg: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+    --shadow-xl: 0 20px 25px -5px rgba(59, 130, 246, 0.25);
+    --gradient-primary: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+    --gradient-accent: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+    --gradient-animated: linear-gradient(-45deg, #1e3a8a, #2563eb, #3b82f6, #60a5fa);
 }
 
 * {
@@ -41,7 +43,25 @@ body {
     line-height: 1.6;
     color: var(--text-primary);
     background: var(--bg-dark);
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(30, 58, 138, 0.1) 0%, transparent 50%);
+    background-attachment: fixed;
     overflow-x: hidden;
+    animation: backgroundShift 20s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0%, 100% {
+        background-position: 0% 0%, 100% 0%, 50% 100%;
+    }
+    33% {
+        background-position: 30% 20%, 70% 30%, 20% 80%;
+    }
+    66% {
+        background-position: 70% 10%, 30% 70%, 80% 20%;
+    }
 }
 
 /* Scrollbar Styling */
@@ -97,64 +117,131 @@ a:hover {
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(50px) rotateX(20deg);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) rotateX(0deg);
     }
 }
 
 @keyframes fadeInLeft {
     from {
         opacity: 0;
-        transform: translateX(-30px);
+        transform: translateX(-50px) rotateY(20deg);
     }
     to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateX(0) rotateY(0deg);
     }
 }
 
 @keyframes fadeInRight {
     from {
         opacity: 0;
-        transform: translateX(30px);
+        transform: translateX(50px) rotateY(-20deg);
     }
     to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateX(0) rotateY(0deg);
     }
 }
 
 @keyframes pulse {
     0%, 100% {
         transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
     }
     50% {
         transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
     }
 }
 
 @keyframes float {
     0%, 100% {
-        transform: translateY(0px);
+        transform: translateY(0px) rotate(0deg);
+    }
+    33% {
+        transform: translateY(-15px) rotate(1deg);
+    }
+    66% {
+        transform: translateY(-5px) rotate(-1deg);
+    }
+}
+
+@keyframes textGlow {
+    0%, 100% {
+        text-shadow: 0 0 5px rgba(59, 130, 246, 0.5), 0 0 10px rgba(59, 130, 246, 0.3);
     }
     50% {
-        transform: translateY(-10px);
+        text-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 30px rgba(59, 130, 246, 0.5);
+    }
+}
+
+@keyframes slideInScale {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(-10deg);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
     }
 }
 
 .animate-fade-in-up {
-    animation: fadeInUp 0.8s ease-out;
+    animation: fadeInUp 1s ease-out;
 }
 
 .animate-fade-in-left {
-    animation: fadeInLeft 0.8s ease-out;
+    animation: fadeInLeft 1s ease-out;
 }
 
 .animate-fade-in-right {
-    animation: fadeInRight 0.8s ease-out;
+    animation: fadeInRight 1s ease-out;
 }
 
 .animate-pulse {
@@ -162,14 +249,33 @@ a:hover {
 }
 
 .animate-float {
-    animation: float 3s ease-in-out infinite;
+    animation: float 6s ease-in-out infinite;
+}
+
+.animate-bounce-in {
+    animation: bounceIn 0.8s ease-out;
+}
+
+.animate-text-glow {
+    animation: textGlow 3s ease-in-out infinite;
+}
+
+.animate-typing {
+    overflow: hidden;
+    border-right: 3px solid var(--accent-color);
+    white-space: nowrap;
+    animation: typing 3s steps(40, end), blink 1s infinite;
+}
+
+.stagger-animation {
+    animation-delay: calc(var(--animation-order, 0) * 0.1s);
 }
 
 /* Navbar Styles */
 .navbar {
-    background: rgba(15, 23, 42, 0.95) !important;
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border-color);
+    background: rgba(10, 17, 40, 0.95) !important;
+    backdrop-filter: blur(25px);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
     padding: 1rem 0;
     position: fixed;
     top: 0;
@@ -177,37 +283,75 @@ a:hover {
     right: 0;
     z-index: 1000;
     transition: var(--transition-normal);
+    box-shadow: 0 4px 30px rgba(59, 130, 246, 0.1);
+    animation: slideInScale 0.8s ease-out;
 }
 
 .navbar.scrolled {
-    background: rgba(15, 23, 42, 0.98) !important;
-    box-shadow: var(--shadow-lg);
+    background: rgba(10, 17, 40, 0.98) !important;
+    box-shadow: 0 8px 40px rgba(59, 130, 246, 0.2);
+    transform: translateY(0);
 }
 
 .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.75rem;
+    font-weight: 800;
     color: var(--text-primary) !important;
-    background: var(--gradient-primary);
+    background: var(--gradient-animated);
+    background-size: 400% 400%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: gradientShift 4s ease-in-out infinite, textGlow 3s ease-in-out infinite;
+    transition: var(--transition-normal);
+    letter-spacing: -0.02em;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+
+.navbar-nav {
+    animation: fadeInRight 1s ease-out 0.3s both;
 }
 
 .navbar-nav .nav-link {
     color: var(--text-secondary) !important;
-    font-weight: 500;
+    font-weight: 600;
     margin: 0 0.5rem;
-    padding: 0.5rem 1rem !important;
-    border-radius: 0.5rem;
-    transition: var(--transition-fast);
+    padding: 0.75rem 1.25rem !important;
+    border-radius: 0.75rem;
+    transition: var(--transition-normal);
     position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+.navbar-nav .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
+    transition: var(--transition-normal);
+}
+
+.navbar-nav .nav-link:hover::before {
+    left: 100%;
 }
 
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.active {
-    color: var(--accent-color) !important;
-    background: rgba(96, 165, 250, 0.1);
+    color: var(--light-blue) !important;
+    background: rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
 }
 
 .navbar-nav .nav-link::after {
@@ -216,15 +360,17 @@ a:hover {
     bottom: 0;
     left: 50%;
     width: 0;
-    height: 2px;
-    background: var(--accent-color);
-    transition: var(--transition-fast);
+    height: 3px;
+    background: var(--gradient-accent);
+    transition: var(--transition-normal);
     transform: translateX(-50%);
+    border-radius: 2px;
 }
 
 .navbar-nav .nav-link:hover::after,
 .navbar-nav .nav-link.active::after {
-    width: 80%;
+    width: 90%;
+    animation: pulse 2s infinite;
 }
 
 .navbar-toggler {
@@ -338,9 +484,11 @@ a:hover {
     min-height: 100vh;
     display: flex;
     align-items: center;
-    background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 50%, var(--primary-color) 100%);
+    background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 30%, var(--primary-color) 70%, var(--secondary-color) 100%);
+    background-size: 400% 400%;
     position: relative;
     overflow: hidden;
+    animation: gradientShift 15s ease-in-out infinite;
 }
 
 .hero::before {
@@ -350,27 +498,48 @@ a:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23334155" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-    opacity: 0.5;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="15" height="15" patternUnits="userSpaceOnUse"><path d="M 15 0 L 0 0 0 15" fill="none" stroke="%233b82f6" stroke-width="0.3" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.4;
+    animation: float 20s ease-in-out infinite;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+    animation: float 30s ease-in-out infinite reverse;
 }
 
 .hero-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
+    animation: fadeInUp 1.2s ease-out;
 }
 
 .hero-title {
-    background: var(--gradient-primary);
+    background: var(--gradient-animated);
+    background-size: 400% 400%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    animation: gradientShift 6s ease-in-out infinite, textGlow 4s ease-in-out infinite;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
 }
 
 .hero-subtitle {
     font-size: clamp(1.25rem, 2.5vw, 1.75rem);
     color: var(--text-secondary);
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    animation: fadeInUp 1.2s ease-out 0.3s both;
+    text-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+    font-weight: 500;
 }
 
 /* Section Styling */
