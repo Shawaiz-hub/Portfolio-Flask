@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Skills - Shawaiz{% endblock %}
+
+{% block content %}
+<div class="container my-5 pt-5">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1 class="display-4 fw-bold">My Skills</h1>
+            <p class="lead text-muted">Technologies and tools I work with</p>
+        </div>
+    </div>
+
+    {% if skills_by_category %}
+    <div class="skills-section">
+        {% for category, skills in skills_by_category.items() %}
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">
+                            <i class="fas fa-{{ 'code' if category == 'frontend' else 'server' if category == 'backend' else 'database' if category == 'database' else 'tools' if category == 'tools' else 'code-branch' }} me-2"></i>
+                            {{ category.title() }}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for skill in skills %}
+                            <div class="col-lg-6 col-md-12 mb-4">
+                                <div class="skill-item">
+                                    <div class="skill-name">
+                                        <span>{{ skill.name }}</span>
+                                        <span class="skill-level">{{ skill.level }}%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" 
+                                             role="progressbar" 
+                                             data-progress="{{ skill.level }}"
+                                             style="width: 0%;"
+                                             aria-valuenow="{{ skill.level }}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Skills Overview -->
+    <div class="row mt-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="text-center">
+                <h2 class="mb-4">Continuous Learning</h2>
+                <p class="lead mb-4">
+                    I believe in staying up-to-date with the latest technologies and best practices. 
+                    These skill levels represent my current proficiency, but I'm always learning and improving.
+                </p>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="text-center">
+                            <i class="fas fa-laptop-code fa-3x text-primary mb-2"></i>
+                            <h5>Frontend Development</h5>
+                            <p class="text-muted">Creating responsive and interactive user interfaces</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="text-center">
+                            <i class="fas fa-server fa-3x text-primary mb-2"></i>
+                            <h5>Backend Development</h5>
+                            <p class="text-muted">Building robust server-side applications and APIs</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="text-center">
+                            <i class="fas fa-gamepad fa-3x text-primary mb-2"></i>
+                            <h5>Game Development</h5>
+                            <p class="text-muted">Creating engaging gaming experiences and interactive media</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="py-5">
+                <i class="fas fa-cogs fa-4x text-muted mb-3"></i>
+                <h3>No skills added yet</h3>
+                <p class="text-muted">Skills will appear here once they're added to the portfolio.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Call to Action -->
+    <div class="row mt-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <div class="bg-light rounded p-5">
+                <h3 class="mb-3">Ready to work together?</h3>
+                <p class="mb-4">
+                    I'm always excited to take on new challenges and work with cutting-edge technologies. 
+                    Let's discuss how my skills can help bring your project to life.
+                </p>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg me-3">Get In Touch</a>
+                <a href="{{ url_for('main.projects') }}" class="btn btn-outline-primary btn-lg">View My Work</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate skill bars when they come into view
+    const skillBars = document.querySelectorAll('.progress-bar');
+    
+    const animateSkillBars = () => {
+        skillBars.forEach(bar => {
+            const progress = bar.getAttribute('data-progress');
+            bar.style.width = progress + '%';
+        });
+    };
+
+    // Use Intersection Observer to trigger animation
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && entry.target.closest('.skills-section')) {
+                setTimeout(animateSkillBars, 300);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    const skillsSection = document.querySelector('.skills-section');
+    if (skillsSection) {
+        observer.observe(skillsSection);
+    }
+});
+</script>
+{% endblock %}

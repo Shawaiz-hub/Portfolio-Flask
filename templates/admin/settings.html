@@ -1,0 +1,229 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Settings - Admin Panel{% endblock %}
+
+{% block page_title %}Site Settings{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Settings</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            
+            <!-- General Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">General Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.site_title.label(class="form-label") }}
+                            {{ form.site_title(class="form-control" + (" is-invalid" if form.site_title.errors else "")) }}
+                            {% if form.site_title.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.site_title.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.contact_email.label(class="form-label") }}
+                            {{ form.contact_email(class="form-control" + (" is-invalid" if form.contact_email.errors else "")) }}
+                            {% if form.contact_email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.contact_email.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.site_description.label(class="form-label") }}
+                        {{ form.site_description(class="form-control" + (" is-invalid" if form.site_description.errors else ""), rows="3") }}
+                        {% if form.site_description.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.site_description.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Section -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Hero Section</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.hero_title.label(class="form-label") }}
+                            {{ form.hero_title(class="form-control" + (" is-invalid" if form.hero_title.errors else "")) }}
+                            {% if form.hero_title.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.hero_title.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.hero_subtitle.label(class="form-label") }}
+                            {{ form.hero_subtitle(class="form-control" + (" is-invalid" if form.hero_subtitle.errors else "")) }}
+                            {% if form.hero_subtitle.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.hero_subtitle.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- About Section -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">About Section</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form.about_text.label(class="form-label") }}
+                        {{ form.about_text(class="form-control ckeditor" + (" is-invalid" if form.about_text.errors else "")) }}
+                        {% if form.about_text.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.about_text.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Social Links -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Social Media Links</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.github_url.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fab fa-github"></i>
+                                </span>
+                                {{ form.github_url(class="form-control" + (" is-invalid" if form.github_url.errors else "")) }}
+                            </div>
+                            {% if form.github_url.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.github_url.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.linkedin_url.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fab fa-linkedin"></i>
+                                </span>
+                                {{ form.linkedin_url(class="form-control" + (" is-invalid" if form.linkedin_url.errors else "")) }}
+                            </div>
+                            {% if form.linkedin_url.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.linkedin_url.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.twitter_url.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fab fa-twitter"></i>
+                                </span>
+                                {{ form.twitter_url(class="form-control" + (" is-invalid" if form.twitter_url.errors else "")) }}
+                            </div>
+                            {% if form.twitter_url.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.twitter_url.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save me-2"></i>Save Settings
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('main.index') }}" target="_blank" class="btn btn-outline-primary">
+                        <i class="fas fa-external-link-alt me-2"></i>View Website
+                    </a>
+                    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-tachometer-alt me-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- System Information -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">System Information</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <strong>Database:</strong>
+                        <span class="text-muted">SQLite</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Framework:</strong>
+                        <span class="text-muted">Flask</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Last Updated:</strong>
+                        <span class="text-muted">December 2024</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize CKEditor for about text
+    if (typeof CKEDITOR !== 'undefined') {
+        CKEDITOR.replace('about_text', {
+            height: 200,
+            toolbar: [
+                { name: 'basic', items: ['Bold', 'Italic', 'Underline'] },
+                { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
+                { name: 'links', items: ['Link', 'Unlink'] }
+            ]
+        });
+    }
+});
+</script>
+{% endblock %}

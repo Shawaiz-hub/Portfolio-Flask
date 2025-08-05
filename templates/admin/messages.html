@@ -1,0 +1,221 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Messages - Admin Panel{% endblock %}
+
+{% block page_title %}Contact Messages{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Messages</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Contact Messages</h2>
+        <p class="text-muted">View and manage messages from your contact form</p>
+    </div>
+    {% set unread_count = ContactMessage.query.filter_by(is_read=False).count() %}
+    {% if unread_count > 0 %}
+    <span class="badge bg-warning fs-6">{{ unread_count }} unread</span>
+    {% endif %}
+</div>
+
+{% if messages.items %}
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>From</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages.items %}
+                    <tr class="{{ 'table-warning' if not message.is_read else '' }}">
+                        <td>
+                            <strong>{{ message.name }}</strong>
+                            <br>
+                            <small class="text-muted">
+                                <a href="mailto:{{ message.email }}" class="text-decoration-none">
+                                    {{ message.email }}
+                                </a>
+                            </small>
+                        </td>
+                        <td>
+                            <strong>{{ message.subject or 'No Subject' }}</strong>
+                        </td>
+                        <td>
+                            <div class="message-preview" style="max-width: 300px;">
+                                {{ message.message[:100] }}
+                                {% if message.message|length > 100 %}...{% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            {{ message.created_at.strftime('%m/%d/%Y') }}
+                            <br>
+                            <small class="text-muted">{{ message.created_at.strftime('%I:%M %p') }}</small>
+                        </td>
+                        <td>
+                            {% if message.is_read %}
+                            <span class="badge bg-success">Read</span>
+                            {% else %}
+                            <span class="badge bg-warning">Unread</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" 
+                                        class="btn btn-outline-info" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#messageModal{{ message.id }}"
+                                        title="View">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                
+                                {% if not message.is_read %}
+                                <form method="POST" 
+                                      action="{{ url_for('admin.mark_message_read', id=message.id) }}" 
+                                      style="display: inline;">
+                                    <button type="submit" 
+                                            class="btn btn-outline-success" 
+                                            title="Mark as Read">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                                
+                                <a href="mailto:{{ message.email }}?subject=Re: {{ message.subject or 'Your Message' }}" 
+                                   class="btn btn-outline-primary" 
+                                   title="Reply">
+                                    <i class="fas fa-reply"></i>
+                                </a>
+                                
+                                <form method="POST" 
+                                      action="{{ url_for('admin.delete_message', id=message.id) }}" 
+                                      style="display: inline;" 
+                                      onsubmit="return confirm('Are you sure you want to delete this message?')">
+                                    <button type="submit" 
+                                            class="btn btn-outline-danger" 
+                                            title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Message Modal -->
+                    <div class="modal fade" id="messageModal{{ message.id }}" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Message from {{ message.name }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row mb-3">
+                                        <div class="col-sm-3"><strong>From:</strong></div>
+                                        <div class="col-sm-9">
+                                            {{ message.name }}
+                                            <br>
+                                            <small class="text-muted">
+                                                <a href="mailto:{{ message.email }}">{{ message.email }}</a>
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-sm-3"><strong>Subject:</strong></div>
+                                        <div class="col-sm-9">{{ message.subject or 'No Subject' }}</div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-sm-3"><strong>Date:</strong></div>
+                                        <div class="col-sm-9">{{ message.created_at.strftime('%B %d, %Y at %I:%M %p') }}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-3"><strong>Message:</strong></div>
+                                        <div class="col-sm-9">
+                                            <div class="border rounded p-3 bg-light">
+                                                {{ message.message|nl2br }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a href="mailto:{{ message.email }}?subject=Re: {{ message.subject or 'Your Message' }}" 
+                                       class="btn btn-primary">
+                                        <i class="fas fa-reply me-1"></i>Reply via Email
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if messages.pages > 1 %}
+<nav aria-label="Messages pagination" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if messages.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.messages', page=messages.prev_num) }}">Previous</a>
+        </li>
+        {% endif %}
+        
+        {% for page_num in messages.iter_pages() %}
+            {% if page_num %}
+                {% if page_num != messages.page %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.messages', page=page_num) }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% endif %}
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if messages.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.messages', page=messages.next_num) }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<!-- Empty State -->
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+        <h4>No messages yet</h4>
+        <p class="text-muted mb-4">Messages from your contact form will appear here.</p>
+        <a href="{{ url_for('main.contact') }}" target="_blank" class="btn btn-primary">
+            <i class="fas fa-external-link-alt me-2"></i>View Contact Form
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

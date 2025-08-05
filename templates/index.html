@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}{{ hero_title }} - Web Developer & Game Builder{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center text-lg-start">
+                <h1 class="hero-title">{{ hero_title }}</h1>
+                <p class="hero-subtitle">{{ hero_subtitle }}</p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('main.projects') }}" class="btn btn-primary me-3">View Projects</a>
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-outline-primary">Contact Me</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Shawaiz" class="profile-image">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Projects -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="display-5 fw-bold">Featured Projects</h2>
+                <p class="lead text-muted">Some of my best work</p>
+            </div>
+        </div>
+        
+        {% if featured_projects %}
+        <div class="row">
+            {% for project in featured_projects %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card project-card h-100">
+                    {% if project.image_path %}
+                    <img src="{{ url_for('static', filename=project.image_path) }}" class="card-img-top" alt="{{ project.title }}">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-code fa-3x text-muted"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text flex-grow-1">{{ project.short_description or project.description[:100] + '...' }}</p>
+                        
+                        {% if project.tech_stack %}
+                        <div class="tech-stack mb-3">
+                            {% for tech in project.tech_stack.split(',')[:3] %}
+                            <span class="tech-badge">{{ tech.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="card-actions">
+                            <a href="{{ url_for('main.project_detail', id=project.id) }}" class="btn btn-primary btn-sm me-2">View Details</a>
+                            {% if project.live_link %}
+                            <a href="{{ project.live_link }}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-external-link-alt"></i> Live Demo
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="row">
+            <div class="col-12 text-center mt-4">
+                <a href="{{ url_for('main.projects') }}" class="btn btn-outline-primary btn-lg">
+                    View All Projects <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="py-5">
+                    <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+                    <h4>No featured projects yet</h4>
+                    <p class="text-muted">Projects will appear here once they're marked as featured.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Quick About -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="display-6 fw-bold mb-4">About Me</h2>
+                <p class="lead">
+                    I'm a passionate web developer and game builder with experience in creating 
+                    modern, responsive applications and engaging interactive experiences.
+                </p>
+                <p>
+                    I love working with cutting-edge technologies and turning ideas into reality. 
+                    Whether it's a web application, mobile app, or game, I focus on creating 
+                    user-friendly and visually appealing solutions.
+                </p>
+                <a href="{{ url_for('main.about') }}" class="btn btn-primary">Learn More About Me</a>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-6 mb-4">
+                        <div class="text-center">
+                            <i class="fas fa-code fa-3x text-primary mb-3"></i>
+                            <h4>Clean Code</h4>
+                            <p class="text-muted">Writing maintainable and efficient code</p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <div class="text-center">
+                            <i class="fas fa-mobile-alt fa-3x text-primary mb-3"></i>
+                            <h4>Responsive</h4>
+                            <p class="text-muted">Mobile-first design approach</p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <div class="text-center">
+                            <i class="fas fa-gamepad fa-3x text-primary mb-3"></i>
+                            <h4>Game Dev</h4>
+                            <p class="text-muted">Creating engaging gaming experiences</p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <div class="text-center">
+                            <i class="fas fa-rocket fa-3x text-primary mb-3"></i>
+                            <h4>Performance</h4>
+                            <p class="text-muted">Optimized and fast applications</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact CTA -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="display-6 fw-bold mb-4">Let's Work Together</h2>
+                <p class="lead mb-4">
+                    Have a project in mind? I'd love to hear about it and discuss how we can bring your ideas to life.
+                </p>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg me-3">Get In Touch</a>
+                <a href="{{ url_for('main.blog') }}" class="btn btn-outline-primary btn-lg">Read My Blog</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

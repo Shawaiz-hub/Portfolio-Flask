@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}About Me - Shawaiz{% endblock %}
+
+{% block content %}
+<div class="container my-5 pt-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold">About Me</h1>
+                <p class="lead text-muted">Get to know more about my journey and experience</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Content -->
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="text-center">
+                <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Shawaiz" class="profile-image mb-4">
+                <h3>Shawaiz</h3>
+                <p class="text-muted">Web Developer & Game Builder</p>
+                
+                <div class="social-icons mt-4">
+                    <a href="{{ get_setting('github_url', '#') }}" target="_blank" class="btn btn-outline-primary btn-sm me-2">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                    <a href="{{ get_setting('linkedin_url', '#') }}" target="_blank" class="btn btn-outline-primary btn-sm me-2">
+                        <i class="fab fa-linkedin"></i> LinkedIn
+                    </a>
+                    <a href="mailto:{{ get_setting('contact_email', '') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="about-content">
+                {% if about_text %}
+                    {{ about_text|safe }}
+                {% else %}
+                <p class="lead">
+                    I'm a passionate web developer and game builder with a love for creating innovative digital solutions.
+                </p>
+                <p>
+                    My journey in software development began with a curiosity about how things work behind the scenes. 
+                    Over the years, I've honed my skills in various technologies and frameworks, specializing in 
+                    web development and game creation.
+                </p>
+                <p>
+                    I believe in writing clean, maintainable code and creating user experiences that are both 
+                    functional and delightful. Whether it's building a responsive web application or developing 
+                    an engaging game, I approach each project with enthusiasm and attention to detail.
+                </p>
+                <p>
+                    When I'm not coding, you can find me exploring new technologies, contributing to open-source 
+                    projects, or playing video games to get inspiration for my own game development projects.
+                </p>
+                {% endif %}
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="row mt-4">
+                <div class="col-md-4 text-center mb-3">
+                    <div class="stats-card bg-primary text-white rounded p-3">
+                        <div class="stats-number">{{ Project.query.count() }}</div>
+                        <div class="stats-label">Projects Completed</div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                    <div class="stats-card bg-success text-white rounded p-3">
+                        <div class="stats-number">{{ Skill.query.count() }}</div>
+                        <div class="stats-label">Skills Mastered</div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                    <div class="stats-card bg-info text-white rounded p-3">
+                        <div class="stats-number">{{ BlogPost.query.filter_by(is_published=True).count() }}</div>
+                        <div class="stats-label">Blog Posts</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Experience Timeline -->
+    {% if experiences %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="text-center mb-5">My Journey</h2>
+            <div class="timeline">
+                {% for experience in experiences %}
+                <div class="timeline-item">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="mb-1">{{ experience.job_title }}</h5>
+                        <span class="badge bg-primary">
+                            {{ experience.start_date.strftime('%Y') }} - 
+                            {% if experience.is_current %}Present{% else %}{{ experience.end_date.strftime('%Y') if experience.end_date }}{% endif %}
+                        </span>
+                    </div>
+                    <h6 class="text-primary mb-2">
+                        {{ experience.company }}
+                        {% if experience.location %} - {{ experience.location }}{% endif %}
+                    </h6>
+                    {% if experience.description %}
+                    <div class="text-muted">
+                        {{ experience.description|safe }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Skills Preview -->
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <h2 class="mb-4">Core Competencies</h2>
+            <p class="lead mb-4">Here are some of the technologies and skills I work with</p>
+            <a href="{{ url_for('main.skills') }}" class="btn btn-primary btn-lg">
+                View All Skills <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row mt-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <div class="bg-light rounded p-5">
+                <h3 class="mb-3">Interested in working together?</h3>
+                <p class="mb-4">I'm always open to discussing new opportunities and exciting projects.</p>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg me-3">Get In Touch</a>
+                <a href="{{ url_for('main.projects') }}" class="btn btn-outline-primary btn-lg">View My Work</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} - Projects - Shawaiz{% endblock %}
+
+{% block content %}
+<div class="container my-5 pt-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('main.projects') }}">Projects</a></li>
+            <li class="breadcrumb-item active">{{ project.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Project Image -->
+            {% if project.image_path %}
+            <img src="{{ url_for('static', filename=project.image_path) }}" 
+                 class="img-fluid rounded mb-4" 
+                 alt="{{ project.title }}"
+                 style="width: 100%; height: 400px; object-fit: cover;">
+            {% else %}
+            <div class="bg-light rounded mb-4 d-flex align-items-center justify-content-center" style="height: 400px;">
+                <i class="fas fa-code fa-5x text-muted"></i>
+            </div>
+            {% endif %}
+
+            <!-- Project Description -->
+            <div class="project-content">
+                <h1 class="display-5 fw-bold mb-3">{{ project.title }}</h1>
+                
+                <div class="mb-4">
+                    <span class="badge bg-primary me-2">{{ project.category.title() }}</span>
+                    {% if project.is_featured %}
+                    <span class="badge bg-warning">Featured</span>
+                    {% endif %}
+                </div>
+
+                <div class="content">
+                    {{ project.description|safe }}
+                </div>
+
+                <!-- Tags -->
+                {% if project.tags %}
+                <div class="mt-4">
+                    <h5>Tags</h5>
+                    {% for tag in project.tags.split(',') %}
+                    <span class="tag me-2 mb-2">{{ tag.strip() }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Action Buttons -->
+                <div class="mt-5">
+                    <div class="d-flex flex-wrap gap-3">
+                        {% if project.live_link %}
+                        <a href="{{ project.live_link }}" target="_blank" class="btn btn-primary btn-lg">
+                            <i class="fas fa-external-link-alt me-2"></i>View Live Demo
+                        </a>
+                        {% endif %}
+                        
+                        {% if project.github_link %}
+                        <a href="{{ project.github_link }}" target="_blank" class="btn btn-outline-secondary btn-lg">
+                            <i class="fab fa-github me-2"></i>View Source Code
+                        </a>
+                        {% endif %}
+                        
+                        <a href="{{ url_for('main.contact') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-envelope me-2"></i>Discuss Project
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Project Info Card -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Project Details</h5>
+                    
+                    <div class="mb-3">
+                        <strong>Category:</strong>
+                        <span class="badge bg-secondary ms-2">{{ project.category.title() }}</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Created:</strong>
+                        <div class="text-muted">{{ project.created_at.strftime('%B %d, %Y') }}</div>
+                    </div>
+                    
+                    {% if project.tech_stack %}
+                    <div class="mb-3">
+                        <strong>Technologies:</strong>
+                        <div class="mt-2">
+                            {% for tech in project.tech_stack.split(',') %}
+                            <span class="tech-badge me-1 mb-1">{{ tech.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Quick Links -->
+                    <div class="mt-4">
+                        <h6>Quick Links</h6>
+                        <div class="d-grid gap-2">
+                            {% if project.live_link %}
+                            <a href="{{ project.live_link }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                <i class="fas fa-external-link-alt me-1"></i>Live Demo
+                            </a>
+                            {% endif %}
+                            {% if project.github_link %}
+                            <a href="{{ project.github_link }}" target="_blank" class="btn btn-sm btn-outline-dark">
+                                <i class="fab fa-github me-1"></i>Source Code
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Projects -->
+            {% set related_projects = Project.query.filter(Project.category == project.category, Project.id != project.id).limit(3).all() %}
+            {% if related_projects %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Related Projects</h5>
+                    {% for related in related_projects %}
+                    <div class="d-flex align-items-center mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}">
+                        {% if related.image_path %}
+                        <img src="{{ url_for('static', filename=related.image_path) }}" 
+                             class="rounded me-3" 
+                             style="width: 60px; height: 60px; object-fit: cover;" 
+                             alt="{{ related.title }}">
+                        {% else %}
+                        <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" 
+                             style="width: 60px; height: 60px;">
+                            <i class="fas fa-code text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">
+                                <a href="{{ url_for('main.project_detail', id=related.id) }}" class="text-decoration-none">
+                                    {{ related.title }}
+                                </a>
+                            </h6>
+                            <small class="text-muted">{{ related.category.title() }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('main.projects') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Projects
+                </a>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-primary">
+                    <i class="fas fa-comment me-2"></i>Get in Touch
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

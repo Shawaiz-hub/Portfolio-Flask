@@ -1,0 +1,102 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} - Admin Panel{% endblock %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('admin.skills') }}">Skills</a></li>
+        <li class="breadcrumb-item active">{{ title }}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Skill Details</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.name.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.category.label(class="form-label") }}
+                        {{ form.category(class="form-select" + (" is-invalid" if form.category.errors else "")) }}
+                        {% if form.category.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.category.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.level.label(class="form-label") }}
+                        {{ form.level(class="form-control" + (" is-invalid" if form.level.errors else ""), type="range", min="1", max="100", oninput="updateLevelDisplay(this.value)") }}
+                        {% if form.level.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.level.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">Beginner</small>
+                            <span id="levelDisplay" class="fw-bold">{{ form.level.data or 50 }}%</span>
+                            <small class="text-muted">Expert</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.order_index.label(class="form-label") }}
+                        {{ form.order_index(class="form-control" + (" is-invalid" if form.order_index.errors else "")) }}
+                        {% if form.order_index.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.order_index.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Higher numbers appear first within the same category</div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('admin.skills') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Skills
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Skill
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateLevelDisplay(value) {
+    document.getElementById('levelDisplay').textContent = value + '%';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const levelInput = document.querySelector('input[name="level"]');
+    if (levelInput) {
+        updateLevelDisplay(levelInput.value);
+    }
+});
+</script>
+{% endblock %}

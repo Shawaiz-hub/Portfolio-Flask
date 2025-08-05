@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Contact - Shawaiz{% endblock %}
+
+{% block content %}
+<div class="container my-5 pt-5">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1 class="display-4 fw-bold">Get In Touch</h1>
+            <p class="lead text-muted">Let's discuss your project or just say hello</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="contact-form">
+                <form method="POST" id="contact-form">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.subject.label(class="form-label") }}
+                        {{ form.subject(class="form-control" + (" is-invalid" if form.subject.errors else "")) }}
+                        {% if form.subject.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.subject.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form.message.label(class="form-label") }}
+                        {{ form.message(class="form-control", rows="6", placeholder="Tell me about your project or just say hello...") }}
+                        {% if form.message.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.message.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="row mt-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="row text-center">
+                <div class="col-md-4 mb-4">
+                    <div class="contact-info-card">
+                        <div class="contact-icon mb-3">
+                            <i class="fas fa-envelope fa-2x text-primary"></i>
+                        </div>
+                        <h5>Email</h5>
+                        <p class="text-muted">
+                            <a href="mailto:{{ get_setting('contact_email', 'hello@example.com') }}" class="text-decoration-none">
+                                {{ get_setting('contact_email', 'hello@example.com') }}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="contact-info-card">
+                        <div class="contact-icon mb-3">
+                            <i class="fab fa-github fa-2x text-primary"></i>
+                        </div>
+                        <h5>GitHub</h5>
+                        <p class="text-muted">
+                            <a href="{{ get_setting('github_url', '#') }}" target="_blank" class="text-decoration-none">
+                                View my repositories
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="contact-info-card">
+                        <div class="contact-icon mb-3">
+                            <i class="fab fa-linkedin fa-2x text-primary"></i>
+                        </div>
+                        <h5>LinkedIn</h5>
+                        <p class="text-muted">
+                            <a href="{{ get_setting('linkedin_url', '#') }}" target="_blank" class="text-decoration-none">
+                                Connect with me
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Information -->
+    <div class="row mt-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <div class="bg-light rounded p-5">
+                <h3 class="mb-3">Let's Build Something Amazing Together</h3>
+                <p class="mb-4">
+                    Whether you have a specific project in mind or just want to explore possibilities, 
+                    I'm always excited to discuss new opportunities. I typically respond within 24 hours.
+                </p>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h6><i class="fas fa-clock text-primary me-2"></i>Quick Response</h6>
+                        <p class="text-muted small">I'll get back to you within 24 hours</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6><i class="fas fa-handshake text-primary me-2"></i>Free Consultation</h6>
+                        <p class="text-muted small">Initial project discussion is always free</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alternative Contact Methods -->
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <h4 class="mb-3">Other Ways to Connect</h4>
+            <div class="social-icons">
+                <a href="{{ get_setting('github_url', '#') }}" target="_blank" class="btn btn-outline-dark btn-lg me-3">
+                    <i class="fab fa-github me-2"></i>GitHub
+                </a>
+                <a href="{{ get_setting('linkedin_url', '#') }}" target="_blank" class="btn btn-outline-primary btn-lg me-3">
+                    <i class="fab fa-linkedin me-2"></i>LinkedIn
+                </a>
+                <a href="{{ get_setting('twitter_url', '#') }}" target="_blank" class="btn btn-outline-info btn-lg">
+                    <i class="fab fa-twitter me-2"></i>Twitter
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
