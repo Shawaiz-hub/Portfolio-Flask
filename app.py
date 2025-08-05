@@ -59,7 +59,14 @@ from utils import get_setting
 
 @app.context_processor
 def inject_settings():
-    return dict(get_setting=get_setting)
+    from models import ContactMessage, Project, BlogPost, Skill
+    return dict(
+        get_setting=get_setting,
+        ContactMessage=ContactMessage,
+        Project=Project,
+        BlogPost=BlogPost,
+        Skill=Skill
+    )
 
 # Import routes
 from routes import main, admin
